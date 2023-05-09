@@ -65,11 +65,7 @@ def search_file(target):
 
     with open(target, "r") as f:
 
-        # Find all words in the file and store in list in lowercase
-        matchword = re.findall("[a-z]+", f.read().lower())
-
-        # If the list isn't empty
-        if matchword:
+        if matchword := re.findall("[a-z]+", f.read().lower()):
             # Add a word to the end of matchword to capture seed words at the end of the file
             matchword.append("END")
             # Create an empty list called results
@@ -80,27 +76,24 @@ def search_file(target):
                 if word in words:
                     # Add to a results list
                     results.append(word)
-                else:
-                    # If the list contains less than 4 items, clear it
-                    if len(results) < 4:
-                        results.clear()
-                    else:
-                        if len(results) < 12:
-                            print("\n*** Partial Match Found in ", target, ":\n")
-                            print("   ".join(results))
-                            results.clear()
-                        elif len(results) == 12:
-                            print("\n*** 12 Word Recovery Seed Found in ", target, ":\n")
-                            print("   ".join(results))
-                            results.clear()
-                        elif len(results) < 24:
-                            print("\n*** Partial Match Found in ", target, ":\n")
-                            print("   ".join(results))
-                            results.clear()
-                        elif len(results) == 24:
-                            print("\n*** 24 Word Recovery Seed Found in ", target, ":\n")
-                            print("   ".join(results))
-                            results.clear()
+                elif len(results) < 4:
+                    results.clear()
+                elif (
+                    len(results) < 12
+                    or len(results) != 12
+                    and len(results) < 24
+                ):
+                    print("\n*** Partial Match Found in ", target, ":\n")
+                    print("   ".join(results))
+                    results.clear()
+                elif len(results) == 12:
+                    print("\n*** 12 Word Recovery Seed Found in ", target, ":\n")
+                    print("   ".join(results))
+                    results.clear()
+                elif len(results) == 24:
+                    print("\n*** 24 Word Recovery Seed Found in ", target, ":\n")
+                    print("   ".join(results))
+                    results.clear()
 
 
 """ The next 7 lines take a BIP 39 word list from a text file and 
